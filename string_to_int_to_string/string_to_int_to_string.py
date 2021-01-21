@@ -82,15 +82,17 @@ def pad_bits(bit_list, desired_size):
 
 
 def bit_list_to_string(paddedBitSeq):
-    """Converts a list of 0's and 1's to a string of alpha/numeric characters"""
+    """
+    Converts a list of 0's and 1's to a string of alpha/numeric characters
+    """
     charBuilder = ''
     # Iterate through by 8's becaause each padded bit sequence is 8 bits long
     for segment in range(0,len(paddedBitSeq),8): 
         # concatenate each new char onto the built up string
-        charBuilder = charBuilder + bitsToChar(paddedBitSeq[segment: segment+8]) 
+        charBuilder = charBuilder + bits_to_char(paddedBitSeq[segment: segment+8]) 
     return charBuilder
 
-def bitsToChar(bitSeq):
+def bits_to_char(bitSeq):
     """Converts each 8 bit length padded bit sequences 
     back to a char based on its unicode value"""
     value = 0
@@ -98,16 +100,17 @@ def bitsToChar(bitSeq):
         value = (value * 2) + bit # This for loop will determine the numeric value of the binary bit sequence input
     return chr(value)
 
-def intToString(integer):
-    """Wrapper function for above four funtions to convert an i
-    nteger of base 10 to a string based on the ASCII values of 
-    its characters"""
-    binary = bin(integer)[2:]
+def int_to_string(integer_to_convert):
+    """
+    Wrapper function for above four funtions to convert an integer of base 10 to a string based on the ASCII values of 
+    its characters
+    """
+    binary = bin(integer_to_convert)[2:]
     bitSeq = binstring_to_bit_list(binary)
     return bit_list_to_string(pad_bits(bitSeq,(len(bitSeq)+(8-(len(bitSeq)%8)))))
 
 ###### Example of converting a string to an int, and back to a string ######
 exampleString = "orange"
 exampleNum = string_to_int(exampleString)
-backToString = intToString(exampleNum)
+backToString = int_to_string(exampleNum)
 print("{} {} {}".format(exampleString, exampleNum, backToString))
