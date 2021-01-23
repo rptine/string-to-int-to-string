@@ -2,10 +2,10 @@ import math
 
 def string_to_bit_list(string_to_convert):
     """
-    Converts any string to a list of 0's and 1's, deterministaclly. Obtains the unicode value 
+    Converts any string to a list of 0's and 1's, deterministically. Obtains the unicode value 
     for each character in the string, converts each unicode value to a binary value represented
     as a list of 0's and 1's, pads the binary reprsentation to 8 bits, and concatenates the list
-    of binaries for each character together.
+    of binaries for each character together (maintaining left to right order).
 
     Args:
         string_to_convert: any string (no limit to character types of size)
@@ -43,8 +43,11 @@ def bit_list_to_int(bit_list):
 
 def string_to_int(string_to_convert):
     """
-    Orchestrator function to convert a string to a base 10 integer, using the unicode values of the
-    characters in the string.
+    Orchestrator function to convert a string to a base 10 integer, deterministically, using the 
+    unicode values of the characters in the string. Obtains the unicode value for each character
+    in the input string, converts the unicode value to an 8-bit binary represented as a list
+    of 0's and 1's, concatenates the binaries represented as lists for each character in order,
+    and converts the concatenated binary to an int of base 10.
 
     Args:
         string_to_convert: any string
@@ -53,23 +56,32 @@ def string_to_int(string_to_convert):
         A base 10 integer calculated from the unicode values of the characters in the string.
     """
     bit_list = string_to_bit_list(string_to_convert)
-    return bit_list_to_int(bit_list)
+    int_form_bit_list = bit_list_to_int(bit_list)
+    return int_form_bit_list
 
 
 def binstring_to_bit_list(binstring): 
     """
-    Converts a string composed of only 0's and 1's, into a list of 0's and 1's ()
+    Converts a string into a list, where each char in the string becomes an item in the list,
+    with matching left to right ordering. Each char in the input string must be able to be casted
+    to an int, as each item in the output list is casted to an int.
 
     Args:
-        binstring: a string containing only 0's and 1's
+        binstring: a string composed entirely of chars that are able to be casted to ints
 
     Returns:
-        A list of 0's and 1's, with identical frequency and ordering the 0's and 1's in the 
-        input string. 
+        A list of ints containing the casted chars from the input string, with identical frequency
+        and ordering.
+    
+    Raises:
+        ValueError: The input string contains a character that cannot be casted to an int.
     """
     bit_list = []
     for bit in binstring:
-        bit_list.append(int(bit))
+        try:
+            bit_list.append(int(bit))
+        except ValueError:
+            print("All characters in the input string must be able to be casted to an int!")
     return bit_list
 
 
@@ -127,24 +139,36 @@ def bits_to_char(bit_seq):
     """
     value = 0
     for bit in bit_seq:
-        value = (value * 2) + bit # This for loop will determine the numeric value of the binary bit sequence input
+        value = (value * 2) + bit
     return chr(value)
 
 def int_to_string(integer_to_convert):
     """
-    Wrapper function for above four funtions to convert an integer of base 10 to a string based on the ASCII values of 
-    its characters
+    Orchestrator function to convert an integer of base 10 to a string, deterministically. Uses the
+    reverse process as string_to_int(): it converts the input integer to binary, pads the binary
+    number so that the binary is of minimum size such that size mod 8 = 0, converts each 8 bit 
+    section of the padded binary to a base 10 int, converts that base 10 ito to its corresponding 
+    unicode character, and finally concatenates the unicode characters together (maintaining left
+    to right order).
+
+    Args:
+        string_to_convert: any string (no limit to character types of size)
+
+    Returns:
+        The input string represented as a list of 0's and 1's
     """
-    binary = bin(integer_to_convert)[2:] # convert input to string representing input's binary value
+    # Convert integer_to_convert (of base 10) to binary, represented as a string
+    binary = bin(integer_to_convert)[2:]
     bit_seq = binstring_to_bit_list(binary)
     bit_seq_size = len(bit_seq)
-    desired_bit_seq_size = bit_seq_size + (8-bit_seq_size % 8) # desired size is min size, such that size mod 8 = 0
+    # Desired size is the minimum size, such that size mod 8 = 0
+    desired_bit_seq_size = bit_seq_size + (8-bit_seq_size % 8)
     padded_bit_seq = pad_bits(bit_seq, desired_bit_seq_size)
     converted_string = bit_list_to_string(padded_bit_seq)
     return converted_string
 
 ###### Example of converting a string to an int, and back to a string ######
-exampleString = "orange"
+exampleString = "orange yoooooo"
 exampleNum = string_to_int(exampleString)
 backToString = int_to_string(exampleNum)
 print("{} {} {}".format(exampleString, exampleNum, backToString))
