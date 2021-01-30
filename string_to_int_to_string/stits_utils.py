@@ -125,6 +125,7 @@ def bit_list_to_string(padded_bit_seq):
         char_builder = char_builder + bits_to_char(padded_bit_seq[segment: segment+8]) 
     return char_builder
 
+
 def bits_to_char(bit_seq):
     """
     Converts a list of size 8, composed of 0's and 1's, into a character. Obtains the base 10 value
@@ -143,29 +144,3 @@ def bits_to_char(bit_seq):
         value = (value * 2) + bit
     char_val = chr(value)
     return char_val
-
-def int_to_string(integer_to_convert):
-    """
-    Orchestrator function to convert an integer of base 10 to a string, deterministically. Uses the
-    reverse process as string_to_int(): it converts the input integer to binary, pads the binary
-    number so that the binary is of minimum size such that size mod 8 = 0, converts each 8 bit 
-    section of the padded binary to a base 10 int, converts that base 10 ito to its corresponding 
-    unicode character, and finally concatenates the unicode characters together (maintaining left
-    to right order).
-
-    Args:
-        integer_to_convert: any int
-
-    Returns:
-        A string representation of the input
-    """
-    # Convert integer_to_convert (of base 10) to binary, represented as a string
-    binary = bin(integer_to_convert)[2:]
-    bit_seq = binstring_to_bit_list(binary)
-    bit_seq_size = len(bit_seq)
-    # Desired size is the minimum size, such that size mod 8 = 0
-    desired_bit_seq_size = bit_seq_size + (8-bit_seq_size % 8)
-    padded_bit_seq = pad_bits(bit_seq, desired_bit_seq_size)
-    converted_string = bit_list_to_string(padded_bit_seq)
-    return converted_string
-

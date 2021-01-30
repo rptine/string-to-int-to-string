@@ -1,4 +1,4 @@
-import stits_utils as stits
+import string_to_int_to_string as stits
 
 ###### Example of converting a string to an int, and back to a string ######
 example_string = "orange"
