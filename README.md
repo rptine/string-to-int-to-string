@@ -13,7 +13,7 @@ Thus, for any string, ```s```:
 
 ## Installation
 Install with pip: 
-```pip install string_to_int_to_string```
+```pip install string-to-int-to-string```
 
 ## API Reference
 * ```string_to_int(string_to_convert)```
